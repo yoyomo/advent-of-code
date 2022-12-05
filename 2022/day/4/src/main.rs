@@ -7,10 +7,6 @@ fn get_range(pair: &str) -> Range<u32> {
     start..end
 }
 
-fn is_fully_contained(a: &Range<u32>, b: &Range<u32>) -> bool{
-    a.start >= b.start && a.end <= b.end
-}
-
 fn does_overlap(a: &Range<u32>, b: &Range<u32>) -> bool {
     a.start >= b.start && a.start <= b.end || a.end <= b.end && a.end >= b.start
 }
@@ -20,7 +16,7 @@ fn main() {
 
     let pairs: Vec<&str> = contents.split('\n').collect();
 
-    let mut fully_contained: u32 = 0;
+    let mut overlaps: u32 = 0;
     for p in pairs {
         let pair: Vec<&str> = p.split(',').collect();
 
@@ -28,10 +24,10 @@ fn main() {
         let second_range = get_range(pair[1]);
 
         if does_overlap(&first_range, &second_range) || does_overlap(&second_range, &first_range) {
-            fully_contained += 1;
+            overlaps += 1;
         }
 
     }
 
-    println!("{fully_contained}")
+    println!("{overlaps}")
 }
