@@ -32,7 +32,6 @@ fn main() {
     for arrangement in arrangements {
         let re = Regex::new(r"move ([0-9]+) from ([0-9]+) to ([0-9]+)").unwrap();
         let cap = re.captures(arrangement).unwrap();
-        println!("{} {} {}", &cap[1], &cap[2], &cap[3]);
 
         let quantity: u32 = cap[1].parse().unwrap();
         let origin = cap[2].parse::<u32>().unwrap() - 1;
