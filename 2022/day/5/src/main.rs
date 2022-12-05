@@ -38,9 +38,10 @@ fn main() {
         let origin = cap[2].parse::<u32>().unwrap() - 1;
         let destination = cap[3].parse::<u32>().unwrap() - 1;
 
+        let destination_len = crates[destination as usize].len();
         for _ in 0..quantity {
             let c = crates[origin as usize].pop().unwrap();
-            crates[destination as usize].push(c);
+            crates[destination as usize].insert(destination_len, c);
         }
 
     }
