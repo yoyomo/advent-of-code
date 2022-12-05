@@ -1,40 +1,91 @@
 use std::fs;
 
-#[derive(PartialEq)]
 enum POINTS {
     ROCK = 1,
     PAPER = 2,
     SCISSOR = 3,
 }
-
-enum WIN {
+enum LOSS {
     ROCK = 3,
     PAPER = 1,
     SCISSOR = 2,
 }
-
+enum WIN {
+    ROCK = 2,
+    PAPER = 3,
+    SCISSOR = 1,
+}
 enum RESULTS {
     LOSE = 0,
     DRAW = 3,
     WIN = 6,
 }
 
-const ROCKS: [&str; 2] = ["A", "X"];
-const PAPERS: [&str; 2] = ["B", "Y"];
-const SCISSORS: [&str; 2] = ["C", "Z"];
+const ROCK: &str = "A";
+const PAPER: &str = "B";
+const SCISSOR: &str = "C";
 
-fn get_type (letter: &str) -> POINTS {
-    if ROCKS.contains(&letter) {
+const LOSE: &str = "X";
+const DRAW: &str = "Y";
+const WIN: &str = "Z";
+
+fn get_point (letter: &str) -> POINTS {
+    if letter == ROCK {
         POINTS::ROCK
     }
-    else if PAPERS.contains(&letter){
+    else if letter == PAPER {
         POINTS::PAPER
     }
-    else if SCISSORS.contains(&letter){
+    else if letter == SCISSOR{
         POINTS::SCISSOR
     }
     else {
         POINTS::SCISSOR // return null or something
+    }
+}
+
+fn get_result (letter: &str) -> RESULTS {
+    if letter == LOSE {
+        RESULTS::LOSE
+    }
+    else if letter == DRAW {
+        RESULTS::DRAW
+    }
+    else if letter == WIN{
+        RESULTS::WIN
+    }
+    else {
+        RESULTS::LOSE // return null or something
+    }
+}
+
+fn get_win (letter: &str) -> WIN {
+    if letter == ROCK {
+        WIN::ROCK
+    }
+    else if letter == PAPER {
+        WIN::PAPER
+    }
+    else if letter == SCISSOR{
+        WIN::SCISSOR
+    }
+    else {
+        WIN::ROCK // return null or something
+    }
+}
+
+fn get_loss (letter: &str) -> LOSS {
+    if letter == ROCK {
+        LOSS::ROCK
+    }
+    else if letter == PAPER {
+        LOSS::PAPER
+    }
+    else if letter == SCISSOR{
+        LOSS::SCISSOR
+    }
+    else {
+        LOSS::ROCK // return null or something
     }
 }
 
@@ -47,27 +98,23 @@ fn main() {
 
     let mut points: u32 = 0;
     for battle in battles {
-        let players: Vec<&str> = battle.split(' ').collect();
+        let columns: Vec<&str> = battle.split(' ').collect();
 
-        let player_one_type = get_type(&players[0]);
-        let player_two_type = get_type(&players[1]);
+        let first_hand = columns[0];
+        let result = columns[1];
+        let player_one_point = get_point(&first_hand);
+        let player_two_result = get_result(&result);
 
-        points += player_two_type as u32;
+        points += player_two_result as u32;
 
-        if player_one_type == player_two_type {
-            points += RESULTS::DRAW as u32;
-        } else if player_two_type as u32 == POINTS::ROCK as u32 && player_one_type as u32 == WIN::ROCK as u32 {
-            points += RESULTS::WIN as u32;
-        } else if player_two_type as u32 == POINTS::PAPER as u32 && player_one_type as u32 == WIN::PAPER as u32 {
-            points += RESULTS::WIN as u32;
-        } else if player_two_type as u32 == POINTS::SCISSOR as u32 && player_one_type as u32 == WIN::SCISSOR as u32 {
-            points += RESULTS::WIN as u32;
+        if result == DRAW {
+            points += player_one_point as u32;
+        } else if result == WIN {
+            points += get_win(first_hand) as u32;
         } else {
-            points += RESULTS::LOSE as u32;
+            points += get_loss(first_hand) as u32;
         }
-        
     }
 
     println!("{points}")
-
 }
