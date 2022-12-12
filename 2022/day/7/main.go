@@ -22,19 +22,19 @@ type Directory struct {
 	Parent      *Directory
 }
 
-func find_or_create_dir(current_dir Directory, dir_name string) Directory {
+func find_or_create_dir(current_dir *Directory, dir_name string) *Directory {
 	idx := slices.IndexFunc(current_dir.Directories, func(d Directory) bool { return d.Name == dir_name })
 
 	if idx >= 0 {
-		return current_dir.Directories[idx]
+		return &current_dir.Directories[idx]
 	} else {
-		new_dir := Directory{Name: dir_name, Files: []File{}, Directories: []Directory{}, Parent: &current_dir}
+		new_dir := Directory{Name: dir_name, Files: []File{}, Directories: []Directory{}, Parent: current_dir}
 		current_dir.Directories = append(current_dir.Directories, new_dir)
-		return new_dir
+		return &new_dir
 	}
 }
 
-func find_or_create_file(current_dir Directory, file_name string, size uint64) File {
+func find_or_create_file(current_dir *Directory, file_name string, size uint64) File {
 	idx := slices.IndexFunc(current_dir.Files, func(d File) bool { return d.Name == file_name })
 
 	if idx >= 0 {
@@ -46,7 +46,7 @@ func find_or_create_file(current_dir Directory, file_name string, size uint64) F
 	}
 }
 
-func map_out_tree(lines []string, root_dir Directory) {
+func map_out_tree(lines []string, root_dir *Directory) {
 	cd_re := regexp.MustCompile(`\$ cd ([\w./]+)`)
 	dir_re := regexp.MustCompile(`dir ([\w./]+)`)
 	file_re := regexp.MustCompile(`(\d+) (.+)`)
@@ -59,7 +59,7 @@ func map_out_tree(lines []string, root_dir Directory) {
 			if dir_name == "/" {
 				current_dir = root_dir
 			} else if dir_name == ".." {
-				current_dir = *current_dir.Parent
+				current_dir = current_dir.Parent
 			} else {
 				current_dir = find_or_create_dir(current_dir, dir_name)
 			}
@@ -75,16 +75,25 @@ func map_out_tree(lines []string, root_dir Directory) {
 	}
 }
 
-func calculate_the_sizes(dir Directory, all_directories map[string]uint64) map[string]uint64 {
-
+func calculate_the_sizes(dir Directory, all_directories map[string]uint64) {
 	for _, file := range dir.Files {
 		all_directories[dir.Name] += file.Size
 	}
 	for _, d := range dir.Directories {
-		all_directories = calculate_the_sizes(d, all_directories)
+		calculate_the_sizes(d, all_directories)
 		all_directories[dir.Name] += all_directories[d.Name]
 	}
-	return all_directories
+}
+
+func find_sum_of_directories(all_directories map[string]uint64) uint64 {
+	var LIMIT uint64 = 100000
+	var sum uint64
+	for _, size := range all_directories {
+		if size < LIMIT {
+			sum += size
+		}
+	}
+	return sum
 }
 
 func main() {
@@ -95,7 +104,11 @@ func main() {
 	root_dir := Directory{Name: "/", Files: []File{}, Directories: []Directory{}}
 	root_dir.Parent = &root_dir
 
-	map_out_tree(lines, root_dir)
+	map_out_tree(lines, &root_dir)
 
-	fmt.Println(calculate_the_sizes(root_dir, make(map[string]uint64)))
+	all_directories := make(map[string]uint64)
+	calculate_the_sizes(root_dir, all_directories)
+
+	fmt.Println(find_sum_of_directories(all_directories))
+
 }
