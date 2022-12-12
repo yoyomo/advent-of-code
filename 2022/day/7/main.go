@@ -75,14 +75,16 @@ func map_out_tree(lines []string, root_dir *Directory) {
 	}
 }
 
-func calculate_the_sizes(dir Directory, all_directories map[string]uint64) {
+func calculate_the_sizes(dir Directory, all_directories map[string]uint64, lineage string) string {
+	this_lineage := lineage + "/" + dir.Name
 	for _, file := range dir.Files {
-		all_directories[dir.Name] += file.Size
+		all_directories[this_lineage] += file.Size
 	}
 	for _, d := range dir.Directories {
-		calculate_the_sizes(d, all_directories)
-		all_directories[dir.Name] += all_directories[d.Name]
+		new_lineage := calculate_the_sizes(d, all_directories, this_lineage)
+		all_directories[this_lineage] += all_directories[new_lineage]
 	}
+	return this_lineage
 }
 
 func find_sum_of_directories(all_directories map[string]uint64) uint64 {
@@ -107,7 +109,7 @@ func main() {
 	map_out_tree(lines, &root_dir)
 
 	all_directories := make(map[string]uint64)
-	calculate_the_sizes(root_dir, all_directories)
+	calculate_the_sizes(root_dir, all_directories, "")
 
 	fmt.Println(find_sum_of_directories(all_directories))
 
