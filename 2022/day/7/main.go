@@ -76,7 +76,12 @@ func map_out_tree(lines []string, root_dir *Directory) {
 }
 
 func calculate_the_sizes(dir Directory, all_directories map[string]uint64, lineage string) string {
-	this_lineage := lineage + "/" + dir.Name
+	var this_lineage string
+	if lineage != "" {
+		this_lineage = lineage + "/" + dir.Name
+	} else {
+		this_lineage = dir.Name
+	}
 	for _, file := range dir.Files {
 		all_directories[this_lineage] += file.Size
 	}
@@ -98,6 +103,23 @@ func find_sum_of_directories(all_directories map[string]uint64) uint64 {
 	return sum
 }
 
+func find_directory_to_delete(all_directories map[string]uint64) uint64 {
+	var DISK_SPACE uint64 = 70000000
+	var REQUIRED_UNUSED_SPACE uint64 = 30000000
+	USED_SPACE := all_directories["/"]
+	UNUSED_SPACE := DISK_SPACE - USED_SPACE
+	REQUIRED_SPACE := REQUIRED_UNUSED_SPACE - UNUSED_SPACE
+
+	var minimum_required_directory uint64 = USED_SPACE
+	for _, size := range all_directories {
+		if size >= REQUIRED_SPACE && size <= minimum_required_directory {
+			minimum_required_directory = size
+		}
+	}
+
+	return minimum_required_directory
+}
+
 func main() {
 	dat, _ := os.ReadFile("data/input.txt")
 
@@ -112,5 +134,7 @@ func main() {
 	calculate_the_sizes(root_dir, all_directories, "")
 
 	fmt.Println(find_sum_of_directories(all_directories))
+
+	fmt.Println(find_directory_to_delete(all_directories))
 
 }
