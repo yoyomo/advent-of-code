@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"regexp"
 	"strconv"
@@ -62,7 +61,6 @@ func main() {
 
 	// map out tree
 	for _, line := range lines {
-		fmt.Println(line)
 		if cd_re.MatchString(line) {
 			dir_name := cd_re.FindStringSubmatch(line)[1]
 			if dir_name == "/" {
