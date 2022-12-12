@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"regexp"
 	"strconv"
@@ -45,21 +46,13 @@ func find_or_create_file(current_dir Directory, file_name string, size uint64) F
 	}
 }
 
-func main() {
-	dat, _ := os.ReadFile("data/input.txt")
-
-	lines := strings.Split(string(dat), "\n")
-
+func map_out_tree(lines []string, root_dir Directory) {
 	cd_re := regexp.MustCompile(`\$ cd ([\w./]+)`)
-
 	dir_re := regexp.MustCompile(`dir ([\w./]+)`)
 	file_re := regexp.MustCompile(`(\d+) (.+)`)
 
-	root_dir := Directory{Name: "/", Files: []File{}, Directories: []Directory{}}
-	root_dir.Parent = &root_dir
 	current_dir := root_dir
 
-	// map out tree
 	for _, line := range lines {
 		if cd_re.MatchString(line) {
 			dir_name := cd_re.FindStringSubmatch(line)[1]
@@ -80,6 +73,29 @@ func main() {
 			find_or_create_file(current_dir, file_name, size)
 		}
 	}
+}
 
-	// calculate the sizes
+func calculate_the_sizes(dir Directory, all_directories map[string]uint64) map[string]uint64 {
+
+	for _, file := range dir.Files {
+		all_directories[dir.Name] += file.Size
+	}
+	for _, d := range dir.Directories {
+		all_directories = calculate_the_sizes(d, all_directories)
+		all_directories[dir.Name] += all_directories[d.Name]
+	}
+	return all_directories
+}
+
+func main() {
+	dat, _ := os.ReadFile("data/input.txt")
+
+	lines := strings.Split(string(dat), "\n")
+
+	root_dir := Directory{Name: "/", Files: []File{}, Directories: []Directory{}}
+	root_dir.Parent = &root_dir
+
+	map_out_tree(lines, root_dir)
+
+	fmt.Println(calculate_the_sizes(root_dir, make(map[string]uint64)))
 }
