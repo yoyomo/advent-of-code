@@ -22,7 +22,9 @@ type Table struct {
 }
 
 func update_position_right(positions []Table, head uint64, tail uint64) {
-	positions[head].col++
+	if head == 0 {
+		positions[head].col++
+	}
 	if positions[head].col-positions[tail].col >= 2 {
 		positions[tail].col++
 		if positions[head].row != positions[tail].row {
@@ -32,7 +34,9 @@ func update_position_right(positions []Table, head uint64, tail uint64) {
 }
 
 func update_position_left(positions []Table, head uint64, tail uint64) {
-	positions[head].col--
+	if head == 0 {
+		positions[head].col--
+	}
 	if positions[head].col-positions[tail].col <= -2 {
 		positions[tail].col--
 		if positions[head].row != positions[tail].row {
@@ -42,7 +46,9 @@ func update_position_left(positions []Table, head uint64, tail uint64) {
 }
 
 func update_position_up(positions []Table, head uint64, tail uint64) {
-	positions[head].row--
+	if head == 0 {
+		positions[head].row--
+	}
 	if positions[head].row-positions[tail].row <= -2 {
 		positions[tail].row--
 		if positions[head].col != positions[tail].col {
@@ -52,7 +58,9 @@ func update_position_up(positions []Table, head uint64, tail uint64) {
 }
 
 func update_position_down(positions []Table, head uint64, tail uint64) {
-	positions[head].row++
+	if head == 0 {
+		positions[head].row++
+	}
 	if positions[head].row-positions[tail].row >= 2 {
 		positions[tail].row++
 		if positions[head].col != positions[tail].col {
@@ -70,6 +78,7 @@ func main() {
 
 	positions := make([]Table, NUM_OF_POSITIONS)
 	routes[get_position_key(positions)] = 1
+	fmt.Println(get_position_key(positions))
 	for _, line := range lines {
 		fmt.Println(line)
 		re := regexp.MustCompile(`(\w) (\d+)`)
@@ -78,8 +87,7 @@ func main() {
 		times, _ := strconv.ParseUint(groups[2], 10, 64)
 
 		for i := uint64(0); i < times; i++ {
-			for j := uint64(0); j < NUM_OF_POSITIONS-1; j += 2 {
-				fmt.Printf("j: %v\n", j)
+			for j := uint64(0); j < NUM_OF_POSITIONS-1; j++ {
 				switch direction {
 				case "R":
 					update_position_right(positions, j, j+1)
@@ -93,7 +101,10 @@ func main() {
 			}
 			routes[get_position_key(positions)]++
 		}
+		fmt.Println(positions)
+
 	}
+	fmt.Println(get_position_key(positions))
 
 	fmt.Println(NUM_OF_POSITIONS - 1)
 	fmt.Println(positions)
