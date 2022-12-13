@@ -87,7 +87,7 @@ func main() {
 		times, _ := strconv.ParseUint(groups[2], 10, 64)
 
 		for i := uint64(0); i < times; i++ {
-			for j := uint64(0); j < NUM_OF_POSITIONS; j++ {
+			for j := uint64(0); j < NUM_OF_POSITIONS-1; j++ {
 				switch direction {
 				case "R":
 					update_position_right(positions, j, j+1)
