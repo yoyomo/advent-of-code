@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -11,6 +11,9 @@ func main() {
 
 	lines := strings.Split(string(dat), "\n")
 
-	fmt.Println(lines)
+	for _, line := range lines {
+		re := regexp.MustCompile(``)
+		re.FindStringSubmatch(line)
+	}
 
 }
