@@ -17,8 +17,6 @@ func main() {
 
 	var cycle int64 = 0
 	var x int64 = 1
-	var next_cycle int64 = 20
-	var sum int64 = 0
 	for _, line := range lines {
 		re := regexp.MustCompile(`(noop|addx)(?:\s([0-9\-]+))?`)
 		groups := re.FindStringSubmatch(line)
@@ -45,10 +43,6 @@ func main() {
 			fmt.Print(pixel)
 
 			cycle++
-			if cycle == next_cycle {
-				sum += x * cycle
-				next_cycle += CYCLE_DIVIDER
-			}
 			if cycle%CYCLE_DIVIDER == 0 {
 				fmt.Print("\n")
 			}
