@@ -93,7 +93,7 @@ func count_level_of_monkey_business(top_two [2]int) int {
 }
 
 func main() {
-	dat, _ := os.ReadFile("data/input.txt")
+	dat, _ := os.ReadFile("data/example.txt")
 
 	blocks := strings.Split(string(dat), "\n\n")
 
