@@ -44,23 +44,13 @@ func init_monkeys(blocks []string, monkeys []Monkey) {
 
 func calculate_lowest_common_denominator(monkeys []Monkey) uint64 {
 	var lowest_common_denominator uint64
-	multiples := make([]map[uint64]bool, len(monkeys))
+	multiples := make(map[uint64]uint64)
 	for i := uint64(1); lowest_common_denominator == 0; i++ {
-		for m, monkey := range monkeys {
+		for _, monkey := range monkeys {
 			denominator := i * monkey.divisible
-			if len(multiples[m]) == 0 {
-				multiples[m] = make(map[uint64]bool)
-			}
-			multiples[m][denominator] = true
+			multiples[denominator]++
 
-			found := 0
-			for _, multiple := range multiples {
-				if multiple[denominator] {
-					found++
-				}
-			}
-
-			if found == len(monkeys) {
+			if multiples[denominator] == uint64(len(monkeys)) {
 				lowest_common_denominator = denominator
 				break
 			}
