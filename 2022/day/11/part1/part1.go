@@ -24,7 +24,7 @@ func parse_items(str string) []int {
 }
 
 func go_for_rounds(blocks []string, monkeys []Monkey) {
-	for round := 0; round < 1; round++ {
+	for round := 0; round < 20; round++ {
 		for _, block := range blocks {
 			groups := regexp.MustCompile(`Monkey\s(\d+):\n\s+Starting items:\s([\d,\s]+)\n\s+Operation:\snew\s=\sold\s([+*])\s(old|\d+)\n\s+Test:\sdivisible by\s(\d+)\n\s+If true: throw to monkey\s(\d+)\n\s+If false: throw to monkey (\d+)`).FindStringSubmatch(block)
 
@@ -38,10 +38,9 @@ func go_for_rounds(blocks []string, monkeys []Monkey) {
 
 			monkey := monkeys[monkey_index]
 
-			monkey.items = append(items, monkey.items...)
-
-			fmt.Println(items)
-			fmt.Println(monkey)
+			if round == 0 {
+				monkey.items = append(items, monkey.items...)
+			}
 
 			for _, item := range monkey.items {
 				monkey.inspected_count++
@@ -62,13 +61,11 @@ func go_for_rounds(blocks []string, monkeys []Monkey) {
 				worry_level /= 3 //check if need to round
 
 				var next_monkey_index int
-				fmt.Println(worry_level)
 				if worry_level%divisible == 0 {
 					next_monkey_index = if_true
 				} else {
 					next_monkey_index = if_false
 				}
-				fmt.Println(next_monkey_index)
 
 				monkeys[next_monkey_index].items = append(monkeys[next_monkey_index].items, worry_level)
 			}
@@ -96,7 +93,7 @@ func count_level_of_monkey_business(top_two [2]int) int {
 }
 
 func main() {
-	dat, _ := os.ReadFile("data/example.txt")
+	dat, _ := os.ReadFile("data/input.txt")
 
 	blocks := strings.Split(string(dat), "\n\n")
 
