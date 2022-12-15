@@ -42,13 +42,42 @@ func init_monkeys(blocks []string, monkeys []Monkey) {
 	}
 }
 
-func go_for_rounds(monkeys []Monkey, part_one bool) {
+func calculate_lowest_common_denominator(monkeys []Monkey) uint64 {
+	var lowest_common_denominator uint64
+	multiples := make(map[uint64][]uint64)
+	for i := uint64(1); lowest_common_denominator == 0; i++ {
+		for _, monkey := range monkeys {
+			denominator := i * monkey.divisible
+			multiples[monkey.divisible] = append(multiples[monkey.divisible], denominator)
+
+			if len(multiples) == len(monkeys) {
+				found := 0
+				for _, multiple := range multiples {
+					for _, m := range multiple {
+						if denominator == m {
+							found++
+							break
+						}
+					}
+				}
+
+				if found == len(monkeys) {
+					lowest_common_denominator = denominator
+					break
+				}
+			}
+		}
+	}
+	return lowest_common_denominator
+}
+
+func go_for_rounds(monkeys []Monkey, lowest_common_denominator uint64, part_one bool) {
 	var MAX_ROUNDS uint64
 	if part_one {
 		MAX_ROUNDS = 20
 	} else {
-		// MAX_ROUNDS = 10000
-		MAX_ROUNDS = 20
+		MAX_ROUNDS = 1000
+		fmt.Println(lowest_common_denominator)
 	}
 	for round := uint64(0); round < MAX_ROUNDS; round++ {
 		for monkey_index, monkey := range monkeys {
@@ -71,6 +100,8 @@ func go_for_rounds(monkeys []Monkey, part_one bool) {
 				}
 				if part_one {
 					worry_level /= 3
+				} else {
+					worry_level %= lowest_common_denominator
 				}
 
 				var next_monkey_index uint64
@@ -110,7 +141,9 @@ func part(blocks []string, part_one bool) {
 
 	init_monkeys(blocks, monkeys)
 
-	go_for_rounds(monkeys, part_one)
+	lowest_common_denominator := calculate_lowest_common_denominator(monkeys)
+
+	go_for_rounds(monkeys, lowest_common_denominator, part_one)
 
 	fmt.Println(monkeys)
 
