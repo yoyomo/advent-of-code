@@ -42,9 +42,9 @@ func init_monkeys(blocks []string, monkeys []Monkey) {
 	}
 }
 
-func go_for_rounds(monkeys []Monkey, divide_by_three bool) {
+func go_for_rounds(monkeys []Monkey, part_one bool) {
 	var MAX_ROUNDS uint64
-	if divide_by_three {
+	if part_one {
 		MAX_ROUNDS = 20
 	} else {
 		// MAX_ROUNDS = 10000
@@ -69,7 +69,7 @@ func go_for_rounds(monkeys []Monkey, divide_by_three bool) {
 				case "+":
 					worry_level += op_number
 				}
-				if divide_by_three {
+				if part_one {
 					worry_level /= 3
 				}
 
@@ -105,12 +105,12 @@ func count_level_of_monkey_business(top_two [2]uint64) uint64 {
 	return top_two[0] * top_two[1]
 }
 
-func part(blocks []string, divide_by_three bool) {
+func part(blocks []string, part_one bool) {
 	monkeys := make([]Monkey, len(blocks))
 
 	init_monkeys(blocks, monkeys)
 
-	go_for_rounds(monkeys, divide_by_three)
+	go_for_rounds(monkeys, part_one)
 
 	fmt.Println(monkeys)
 
