@@ -127,6 +127,8 @@ func get_top_two(monkeys []Monkey) [2]uint64 {
 		if monkey.inspected_count > top_two[0] {
 			top_two[1] = top_two[0]
 			top_two[0] = monkey.inspected_count
+		} else if monkey.inspected_count > top_two[1] {
+			top_two[1] = monkey.inspected_count
 		}
 	}
 	return top_two
