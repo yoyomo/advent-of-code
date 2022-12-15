@@ -31,7 +31,7 @@ func go_for_rounds(blocks []string, monkeys []Monkey) {
 			monkey_index, _ := strconv.Atoi(groups[1])
 			items := parse_items(groups[2])
 			operation := groups[3]
-			op_number, _ := strconv.Atoi(groups[4])
+			op_value := groups[4]
 			divisible, _ := strconv.Atoi(groups[5])
 			if_true, _ := strconv.Atoi(groups[6])
 			if_false, _ := strconv.Atoi(groups[7])
@@ -40,8 +40,18 @@ func go_for_rounds(blocks []string, monkeys []Monkey) {
 
 			monkey.items = append(items, monkey.items...)
 
+			fmt.Println(items)
+			fmt.Println(monkey)
+
 			for _, item := range monkey.items {
 				monkey.inspected_count++
+				var op_number int
+				switch op_value {
+				case "old":
+					op_number = item
+				default:
+					op_number, _ = strconv.Atoi(op_value)
+				}
 				worry_level := item
 				switch operation {
 				case "*":
@@ -52,14 +62,17 @@ func go_for_rounds(blocks []string, monkeys []Monkey) {
 				worry_level /= 3 //check if need to round
 
 				var next_monkey_index int
+				fmt.Println(worry_level)
 				if worry_level%divisible == 0 {
 					next_monkey_index = if_true
 				} else {
 					next_monkey_index = if_false
 				}
+				fmt.Println(next_monkey_index)
+
 				monkeys[next_monkey_index].items = append(monkeys[next_monkey_index].items, worry_level)
 			}
-			monkey.items = []int{}
+			monkey.items = nil
 
 			monkeys[monkey_index] = monkey
 		}
