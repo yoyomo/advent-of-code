@@ -39,7 +39,7 @@ func get_number_of_steps(heightmap [][]rune, end_pos Position, prev_height rune,
 
 	current_height := heightmap[current_pos.row][current_pos.col]
 
-	if current_height > prev_height+1 || current_height < prev_height {
+	if !(current_height == prev_height+1 || current_height == prev_height) {
 		return []Position{}
 	}
 
