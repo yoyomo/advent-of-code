@@ -3,7 +3,7 @@ use std::collections::{HashSet};
 use regex::Regex;
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
-enum TYPE {
+pub enum TYPE {
     FiveOfAKind,
     FourOfAKind,
     FullHouse,
@@ -15,17 +15,16 @@ enum TYPE {
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Hand {
-    cards: String,
-    bid: u32,
-    label_type: TYPE,
-    rank: u32,
-    card_values: Vec<usize>,
+    pub cards: String,
+    pub bid: usize,
+    pub label_type: TYPE,
+    pub card_values: Vec<usize>,
 }
 
 
 const LABELS: [char; 13] = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 
-pub fn part1(lines: Vec<&str>) -> u32 {
+pub fn part1(lines: Vec<&str>) -> usize {
     let re = Regex::new(r"(\w{5})\s([0-9]+)").unwrap();
 
     let mut hands: Vec<Hand> = vec![];
@@ -65,7 +64,6 @@ pub fn part1(lines: Vec<&str>) -> u32 {
             cards,
             bid,
             label_type,
-            rank: 0,
             card_values,
         });
     }
@@ -78,14 +76,9 @@ pub fn part1(lines: Vec<&str>) -> u32 {
     });
 
     let mut total_winnings = 0;
-    let mut rank = 1;
-    for mut hand in hands {
-        hand.rank = rank;
-        rank += 1;
-
-        total_winnings += hand.rank * hand.bid;
+    for (rank, hand) in hands.iter().enumerate() {
+        total_winnings += (rank + 1) * hand.bid;
     }
-
 
     return total_winnings;
 }
