@@ -15,8 +15,7 @@ fn get_next_chain(source_map: &Vec<(usize, usize, usize)>, source: usize) -> usi
 }
 
 pub fn part1(lines: Vec<&str>) -> usize {
-
-    let mut src_dest_map: HashMap<&str, Vec<(usize,usize,usize)>> = HashMap::new();
+    let mut src_dest_map: HashMap<&str, Vec<(usize, usize, usize)>> = HashMap::new();
 
     let seeds_re = Regex::new(r"seeds:\s(.*)").unwrap();
     let src_dest_re = Regex::new(r"(.*)-to-(.*)\smap:").unwrap();
@@ -25,7 +24,6 @@ pub fn part1(lines: Vec<&str>) -> usize {
     let mut seeds: Vec<usize> = vec![];
 
     let mut src = "";
-    // let mut dest = "";
 
     for line in lines {
         match seeds_re.captures(line) {
@@ -42,7 +40,6 @@ pub fn part1(lines: Vec<&str>) -> usize {
         match src_dest_re.captures(line) {
             Some(g) => {
                 src = g.get(1).unwrap().as_str();
-                // dest = g.get(2).unwrap().as_str();
                 src_dest_map.insert(src, vec![]);
             }
             None => {}
@@ -55,7 +52,7 @@ pub fn part1(lines: Vec<&str>) -> usize {
                 let range: usize = g.get(3).unwrap().as_str().parse().unwrap();
 
                 src_dest_map.entry(src).and_modify(|v| {
-                    v.push((d,s,range));
+                    v.push((d, s, range));
                 });
             }
             None => {}
@@ -67,7 +64,8 @@ pub fn part1(lines: Vec<&str>) -> usize {
         let soil = get_next_chain(src_dest_map.get("seed").unwrap(), seed);
         let fertilizer = get_next_chain(src_dest_map.get("soil").unwrap(), soil);
         let water = get_next_chain(src_dest_map.get("fertilizer").unwrap(), fertilizer);
-        let temperature = get_next_chain(src_dest_map.get("water").unwrap(), water);
+        let light = get_next_chain(src_dest_map.get("water").unwrap(), water);
+        let temperature = get_next_chain(src_dest_map.get("light").unwrap(), light);
         let humidity = get_next_chain(src_dest_map.get("temperature").unwrap(), temperature);
         let location = get_next_chain(src_dest_map.get("humidity").unwrap(), humidity);
         if location < min_location {
