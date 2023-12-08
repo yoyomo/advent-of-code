@@ -4,13 +4,13 @@ use regex::Regex;
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub enum TYPE {
-    FiveOfAKind,
-    FourOfAKind,
-    FullHouse,
-    ThreeOfAKind,
-    TwoPair,
-    OnePair,
     HighCard,
+    OnePair,
+    TwoPair,
+    ThreeOfAKind,
+    FullHouse,
+    FourOfAKind,
+    FiveOfAKind,
 }
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -69,7 +69,7 @@ pub fn part1(lines: Vec<&str>) -> usize {
     }
 
     hands.sort_by(|a, b| {
-        match a.label_type.cmp(&b.label_type).reverse() {
+        match a.label_type.cmp(&b.label_type) {
             Ordering::Equal => a.card_values.cmp(&b.card_values),
             other => other,
         }
