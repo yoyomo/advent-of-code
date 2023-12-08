@@ -1,5 +1,5 @@
 use std::cmp::Ordering;
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashSet};
 use regex::Regex;
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
@@ -16,27 +16,16 @@ enum TYPE {
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Hand {
     cards: String,
-    label_type: TYPE,
     bid: u32,
+    label_type: TYPE,
     rank: u32,
+    card_values: Vec<usize>,
 }
 
 
-// enum Labels { L2, L3, L4, L5, L6, L7, L8, L9,LT, LJ, LQ, LK, LA }
-const LABELS: [char; 13] = ['2', '3', '4', '5', '6', '7', '8', '9','T', 'J', 'Q', 'K', 'A'];
-// const LABELS: HashMap<&str, u32> = HashMap::from([("2", 0), ("3", 1), ("4", 2), ("5", 3), ("6", 4), ("7", 5), ("8", 6), ("9", 7), ("T", 8), ("J", 9), ("Q", 10), ("K", 11), ("A", 12)]);
-
-fn get_labels() -> HashMap<char, usize> {
-    let mut label_map: HashMap<char, usize> = HashMap::new();
-
-    for (l, label) in LABELS.iter().enumerate() {
-        label_map.insert(*label, l);
-    }
-    label_map
-}
+const LABELS: [char; 13] = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 
 pub fn part1(lines: Vec<&str>) -> u32 {
-    let labels = get_labels();
     let re = Regex::new(r"(\w{5})\s([0-9]+)").unwrap();
 
     let mut hands: Vec<Hand> = vec![];
@@ -67,17 +56,23 @@ pub fn part1(lines: Vec<&str>) -> u32 {
             _ => panic!()
         };
 
+        let mut card_values: Vec<usize> = vec![];
+        for card in cards.chars() {
+            card_values.push(LABELS.iter().position(|&c| c == card).unwrap())
+        }
+
         hands.push(Hand {
             cards,
             bid,
             label_type,
             rank: 0,
+            card_values,
         });
     }
 
     hands.sort_by(|a, b| {
         match a.label_type.cmp(&b.label_type).reverse() {
-            Ordering::Equal => a.cards.cmp(&b.cards).reverse(),
+            Ordering::Equal => a.card_values.cmp(&b.card_values),
             other => other,
         }
     });
