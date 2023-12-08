@@ -1,7 +1,6 @@
-use std::str::Lines;
 use regex::Regex;
 
-pub fn part1(lines: Lines) -> &'static str {
+pub fn part1(lines: Vec<&str>) -> &'static str {
 
     let re = Regex::new(r".*").unwrap();
 

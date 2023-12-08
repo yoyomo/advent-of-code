@@ -11,6 +11,6 @@ fn main() {
     let binding = read_to_string(filename).expect("");
 
     println!("{}", part1(binding.split("\n").collect()));
-    println!("{}", part2(binding.split("\n").collect()));
+    println!("{:?}", part2(binding.split("\n").collect()));
     return
 }

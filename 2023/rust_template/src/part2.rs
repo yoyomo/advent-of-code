@@ -1,6 +1,4 @@
-use std::str::Lines;
-
-pub fn part2(lines: Lines) -> &'static str {
+pub fn part2(lines: Vec<&str>) -> &'static str {
 
     for _ in lines {
 
