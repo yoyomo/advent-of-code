@@ -1,9 +1,22 @@
 use std::collections::HashMap;
 use regex::{Regex};
 
+fn get_next_chain(source_map: &Vec<(usize, usize, usize)>, source: usize) -> usize {
+    for tuple in source_map {
+        let d = tuple.0;
+        let s = tuple.1;
+        let range = tuple.2;
+        if source >= s && source <= s + range {
+            return d + source - s;
+        }
+    }
+
+    return source;
+}
+
 pub fn part1(lines: Vec<&str>) -> usize {
 
-    let mut src_dest_map: HashMap<&str, HashMap<usize, usize>> = HashMap::new();
+    let mut src_dest_map: HashMap<&str, Vec<(usize,usize,usize)>> = HashMap::new();
 
     let seeds_re = Regex::new(r"seeds:\s(.*)").unwrap();
     let src_dest_re = Regex::new(r"(.*)-to-(.*)\smap:").unwrap();
@@ -30,23 +43,20 @@ pub fn part1(lines: Vec<&str>) -> usize {
             Some(g) => {
                 src = g.get(1).unwrap().as_str();
                 // dest = g.get(2).unwrap().as_str();
-                src_dest_map.insert(src, HashMap::new());
+                src_dest_map.insert(src, vec![]);
             }
             None => {}
         }
 
         match dest_src_range_re.captures(line) {
             Some(g) => {
-                let mut d: usize = g.get(1).unwrap().as_str().parse().unwrap();
+                let d: usize = g.get(1).unwrap().as_str().parse().unwrap();
                 let s: usize = g.get(2).unwrap().as_str().parse().unwrap();
                 let range: usize = g.get(3).unwrap().as_str().parse().unwrap();
 
-                for i in s..s+range {
-                    src_dest_map.entry(src).and_modify(|v| {
-                        v.insert(i, d);
-                    });
-                    d += 1;
-                }
+                src_dest_map.entry(src).and_modify(|v| {
+                    v.push((d,s,range));
+                });
             }
             None => {}
         }
@@ -54,33 +64,14 @@ pub fn part1(lines: Vec<&str>) -> usize {
 
     let mut min_location = usize::MAX;
     for seed in seeds {
-        let soil = match src_dest_map.get("seed").unwrap().get(&seed){
-            Some(value) => {value}
-            None => {&seed}
-        };
-        let fertilizer = match src_dest_map.get("soil").unwrap().get(soil){
-            Some(value) => {value}
-            None => {soil}
-        };
-        let water = match src_dest_map.get("fertilizer").unwrap().get(fertilizer){
-            Some(value) => {value}
-            None => {fertilizer}
-        };
-        let temperature = match src_dest_map.get("water").unwrap().get(water){
-            Some(value) => {value}
-            None => {water}
-        };
-        let humidity = match src_dest_map.get("temperature").unwrap().get(temperature){
-            Some(value) => {value}
-            None => {temperature}
-        };
-        let location = match src_dest_map.get("humidity").unwrap().get(humidity){
-            Some(value) => {value}
-            None => {humidity}
-        };
-
-        if location < &min_location {
-            min_location = *location
+        let soil = get_next_chain(src_dest_map.get("seed").unwrap(), seed);
+        let fertilizer = get_next_chain(src_dest_map.get("soil").unwrap(), soil);
+        let water = get_next_chain(src_dest_map.get("fertilizer").unwrap(), fertilizer);
+        let temperature = get_next_chain(src_dest_map.get("water").unwrap(), water);
+        let humidity = get_next_chain(src_dest_map.get("temperature").unwrap(), temperature);
+        let location = get_next_chain(src_dest_map.get("humidity").unwrap(), humidity);
+        if location < min_location {
+            min_location = location
         }
     }
 
