@@ -13,6 +13,10 @@ fn main() {
 
     let mut start = Instant::now();
     println!("{} at {:?}", part1(binding.split("\n").collect()), start.elapsed());
+
+    let filename = "data/input.txt";
+    let binding = read_to_string(filename).expect("");
+
     start = Instant::now();
     println!("{} at {:?}", part2(binding.split("\n").collect()), start.elapsed());
     return

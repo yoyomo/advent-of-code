@@ -13,7 +13,6 @@ pub fn part1(lines: Vec<&str>) -> usize {
     let mut instructions: String = "".to_string();
 
     let mut nodes: HashMap<String, Node> = HashMap::new();
-    let mut first_node: String = "".to_string();
 
     for line in lines {
         if instructions.is_empty(){
@@ -30,9 +29,6 @@ pub fn part1(lines: Vec<&str>) -> usize {
                 let node = g.get(1).unwrap().as_str().to_string();
                 let left = g.get(2).unwrap().as_str().to_string();
                 let right = g.get(3).unwrap().as_str().to_string();
-                if first_node.is_empty() {
-                    first_node = node.clone();
-                }
                 nodes.insert(node, Node {
                     left,
                     right,
