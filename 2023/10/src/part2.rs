@@ -13,7 +13,7 @@ pub fn part2(lines: Vec<&str>) -> usize {
                 if inside {
                     sum += 1;
                 }
-            } else if is_connecting_pipe([r,c], &map, 'S') {
+            } else if is_connecting_pipe([r,c], &map, 'N') {
                 inside = !inside
             }
         }
