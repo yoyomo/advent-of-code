@@ -1,6 +1,6 @@
 use regex::Regex;
 
-pub fn part1(lines: Vec<&str>) -> &'static str {
+pub fn part1(lines: Vec<&str>) -> u32 {
 
     let re = Regex::new(r".*").unwrap();
 
@@ -9,5 +9,5 @@ pub fn part1(lines: Vec<&str>) -> &'static str {
         println!("{}", groups.get(0).unwrap().as_str())
     }
 
-    return ""
+    return 0
 }

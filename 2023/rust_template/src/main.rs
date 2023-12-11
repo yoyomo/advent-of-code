@@ -6,7 +6,7 @@ use std::time::Instant;
 use crate::part1::part1;
 use crate::part2::part2;
 
-fn call_part(filename: &str, part: fn(Vec<&str>) -> &str) {
+fn call_part(filename: &str, part: fn(Vec<&str>) -> u32) {
     let binding = read_to_string(filename).expect("");
 
     let start = Instant::now();
