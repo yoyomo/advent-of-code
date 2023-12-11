@@ -15,7 +15,7 @@ fn call_part(filename: &str, part: fn(Vec<&str>) -> u64) {
 
 fn main() {
     call_part("data/sample.txt", part1);
-    // call_part("data/input.txt", part1);
+    call_part("data/input.txt", part1);
 
     call_part("data/sample.txt", part2);
     call_part("data/input.txt", part2);

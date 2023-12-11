@@ -1,4 +1,4 @@
-pub fn part1(lines: Vec<&str>) -> u64 {
+pub fn get_all_steps(lines: Vec<&str>, space: u64) -> u64 {
     let mut galaxies: Vec<[isize; 2]> = vec![];
     for (l, line) in lines.iter().enumerate() {
         for (c, char) in line.chars().enumerate() {
@@ -54,7 +54,7 @@ pub fn part1(lines: Vec<&str>) -> u64 {
 
             current_position[pos] += diff as isize;
 
-            diff *= if no_galaxies[pos].contains(&current_position[pos]) {2} else {1};
+            diff *= if no_galaxies[pos].contains(&current_position[pos]) {space} else {1};
 
             steps += diff.abs() as u64;
 
@@ -63,6 +63,9 @@ pub fn part1(lines: Vec<&str>) -> u64 {
 
         all_steps += steps;
     }
+    all_steps
+}
 
-    return all_steps;
+pub fn part1(lines: Vec<&str>) -> u64 {
+    return get_all_steps(lines, 2);
 }
