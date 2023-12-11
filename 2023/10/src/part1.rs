@@ -12,7 +12,7 @@ fn flip_direction(direction: char) -> char {
     }
 }
 
-fn is_connecting_pipe(position: [usize; 2], map: &Vec<Vec<char>>, direction: char) -> bool {
+pub fn is_connecting_pipe(position: [usize; 2], map: &Vec<Vec<char>>, direction: char) -> bool {
     let pipe = map[position[0]][position[1]];
     let pipe_direction = flip_direction(direction);
     match pipe {
@@ -37,19 +37,7 @@ fn are_pipes_connected(current_position: [usize;2], next_position:[usize;2], map
 
 }
 
-pub fn part1(lines: Vec<&str>) -> usize {
-
-    // find S
-    let mut map: Vec<Vec<char>> = vec![];
-    let mut starting_point = [0, 0];
-    for (l, line) in lines.iter().enumerate() {
-        map.push(line.chars().collect());
-        if line.contains('S') {
-            starting_point = [l, line.chars().position(|s| s == 'S').unwrap()];
-        }
-    }
-
-    // find main loop
+pub fn find_main_loop(starting_point: [usize;2], map: &Vec<Vec<char>>) -> Vec<[usize; 2]> {
     let mut main_loop: Vec<[usize; 2]> = vec![];
     let mut current_position = starting_point;
     let mut previous_position = current_position; // to avoid going back
@@ -78,6 +66,27 @@ pub fn part1(lines: Vec<&str>) -> usize {
             }
         }
     }
+    return main_loop;
+}
+
+pub fn get_map_and_starting_point(lines: Vec<&str>) -> ([usize;2], Vec<Vec<char>>) {
+    let mut map: Vec<Vec<char>> = vec![];
+    let mut starting_point = [0, 0];
+    for (l, line) in lines.iter().enumerate() {
+        map.push(line.chars().collect());
+        if line.contains('S') {
+            starting_point = [l, line.chars().position(|s| s == 'S').unwrap()];
+        }
+    }
+    return (starting_point, map)
+}
+
+pub fn part1(lines: Vec<&str>) -> usize {
+
+    // find S
+    let (starting_point, map) = get_map_and_starting_point(lines);
+    // find main loop
+    let main_loop = find_main_loop(starting_point, &map);
 
     //calculate farthest pipe
     return main_loop.len() / 2;
