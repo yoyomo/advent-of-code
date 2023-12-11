@@ -44,7 +44,7 @@ pub fn get_all_steps(lines: Vec<&str>, space: u64) -> u64 {
             let pos = if is_horizontal { 1 } else { 0 };
             let switch_pos = if is_horizontal { 0 } else { 1 };
 
-            let mut diff: i32 = if current_position[pos] < destination_position[pos] {
+            let mut diff: isize = if current_position[pos] < destination_position[pos] {
                 1
             } else if current_position[pos] > destination_position[pos] {
                 -1
@@ -52,9 +52,9 @@ pub fn get_all_steps(lines: Vec<&str>, space: u64) -> u64 {
                 0
             };
 
-            current_position[pos] += diff as isize;
+            current_position[pos] += diff;
 
-            diff *= if no_galaxies[pos].contains(&current_position[pos]) {space} else {1};
+            diff *= if no_galaxies[pos].contains(&current_position[pos]) {space as isize} else {1};
 
             steps += diff.abs() as u64;
 
