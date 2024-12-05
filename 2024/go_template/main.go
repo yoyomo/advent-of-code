@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	dat, _ := os.ReadFile("data/input.txt")
+	dat, _ := os.ReadFile("data/sample.txt")
 
 	lines := strings.Split(string(dat), "\n")
 
@@ -16,4 +16,6 @@ func main() {
 		re.FindStringSubmatch(line)
 	}
 
+	print(part1(), "\n")
+	print(part2(), "\n")
 }
