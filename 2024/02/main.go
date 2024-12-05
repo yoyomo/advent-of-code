@@ -2,7 +2,7 @@ package main
 
 import (
 	"os"
-	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -11,10 +11,36 @@ func main() {
 
 	lines := strings.Split(string(dat), "\n")
 
+	isSafeTotal := 0
+REPORT:
 	for _, line := range lines {
-		re := regexp.MustCompile(``)
-		re.FindStringSubmatch(line)
+		isAlreadyIncreasing := 0
+		numbers := strings.Split(line, " ")
+		for i := 0; i < len(numbers)-2; i++ {
+			number, _ := strconv.Atoi(numbers[i])
+			nextNumber, _ := strconv.Atoi(numbers[i+1])
+			diff := nextNumber - number
+			isIncreasing := 0
+			if diff < 0 {
+				isIncreasing = -1
+				diff = -diff
+			} else if diff > 0 {
+				isIncreasing = 1
+			} else {
+				continue REPORT
+			}
+			if diff > 3 {
+				continue REPORT
+			}
+			if isAlreadyIncreasing != 0 && isIncreasing != isAlreadyIncreasing {
+				continue REPORT
+			}
+			isAlreadyIncreasing = isIncreasing
+		}
+		isSafeTotal++
 	}
+
+	print(isSafeTotal, "\n")
 
 	print(part1(), "\n")
 	print(part2(), "\n")
