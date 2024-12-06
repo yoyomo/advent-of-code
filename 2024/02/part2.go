@@ -5,15 +5,14 @@ import (
 	"strings"
 )
 
-func part2(lines []string) int {
+func getSafeTotal(lines [][]int) int {
 	isSafeTotal := 0
 REPORT:
-	for _, line := range lines {
+	for _, numbers := range lines {
 		isAlreadyIncreasing := 0
-		numbers := strings.Split(line, " ")
 		for i := 0; i < len(numbers)-1; i++ {
-			number, _ := strconv.Atoi(numbers[i])
-			nextNumber, _ := strconv.Atoi(numbers[i+1])
+			number := numbers[i]
+			nextNumber := numbers[i+1]
 			diff := nextNumber - number
 			isIncreasing := 0
 			if diff < 0 {
@@ -36,4 +35,22 @@ REPORT:
 		isSafeTotal++
 	}
 	return isSafeTotal
+}
+
+func stringToIntList(lines []string) [][]int {
+	var numberLists [][]int
+	for _, line := range lines {
+		lineNumbers := strings.Split(line, " ")
+		var numbers []int
+		for _, lineNumber := range lineNumbers {
+			number, _ := strconv.Atoi(lineNumber)
+			numbers = append(numbers, number)
+		}
+		numberLists = append(numberLists, numbers)
+	}
+	return numberLists
+}
+
+func part2(lines []string) int {
+	return getSafeTotal(stringToIntList(lines))
 }
