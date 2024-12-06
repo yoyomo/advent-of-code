@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	dat, _ := os.ReadFile("data/sample.txt")
+	dat, _ := os.ReadFile("data/input.txt")
 
 	lines := strings.Split(string(dat), "\n")
 
@@ -16,7 +16,7 @@ REPORT:
 	for _, line := range lines {
 		isAlreadyIncreasing := 0
 		numbers := strings.Split(line, " ")
-		for i := 0; i < len(numbers)-2; i++ {
+		for i := 0; i < len(numbers)-1; i++ {
 			number, _ := strconv.Atoi(numbers[i])
 			nextNumber, _ := strconv.Atoi(numbers[i+1])
 			diff := nextNumber - number
@@ -32,10 +32,11 @@ REPORT:
 			if diff > 3 {
 				continue REPORT
 			}
-			if isAlreadyIncreasing != 0 && isIncreasing != isAlreadyIncreasing {
+			if isAlreadyIncreasing == 0 {
+				isAlreadyIncreasing = isIncreasing
+			} else if isIncreasing != isAlreadyIncreasing {
 				continue REPORT
 			}
-			isAlreadyIncreasing = isIncreasing
 		}
 		isSafeTotal++
 	}
